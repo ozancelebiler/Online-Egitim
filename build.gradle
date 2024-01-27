@@ -1,0 +1,80 @@
+plugins {
+    /*
+    Buraya yazılan özellikler alttaki tüm microservislerde yazılmasa bile etkili olacaktır.
+     */
+    id 'java'
+    id 'org.springframework.boot' version '2.7.17'
+    id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+    id 'application'
+
+}
+
+
+allprojects {
+    /*
+    tüm projelerde (root+sub) gerekli ayarları belirlemek için:
+     */
+
+    apply plugin: 'application'
+    apply plugin: 'java'
+    apply plugin: 'eclipse'
+    apply plugin: 'idea'
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'io.spring.dependency-management'
+    apply plugin: 'java-library'
+    apply from: "${rootDir}/dependencies.gradle"
+
+}
+
+subprojects {
+    /*
+    sadece sub projelerde gerekli ayarları belirlemek için:
+     */
+    group   'com.ozanc'
+    version  'v.0.0.1'
+
+   sourceCompatibility= JavaVersion.VERSION_19
+   targetCompatibility= JavaVersion.VERSION_19
+
+    tasks.withType(JavaCompile)configureEach{
+        options.encoding='UTF-8'
+    }
+}
+
+allprojects {
+    repositories {
+        mavenCentral()
+        google()
+    }
+
+    buildscript {
+        repositories {
+            mavenCentral()
+        }
+    }
+
+    dependencies {
+        implementation libs.springBootWeb
+        implementation libs.lombok
+        annotationProcessor libs.lombok
+        implementation libs.swagger
+        implementation libs.mapstruct
+        annotationProcessor libs.mapstructProcessor
+        implementation libs.springOpenFeign
+        implementation libs.springBootValidation
+        implementation libs.jwt
+        implementation libs.springOpenFeign
+
+    }
+
+}
+
+configurations {
+    compileOnly{
+        extendsFrom annotationProcessor
+    }
+
+
+
+}
+
